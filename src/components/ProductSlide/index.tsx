@@ -90,10 +90,15 @@ const ProductSlide: React.FC<ProductSlide> = ({ category }) => {
   return (
     <Container ref={refContainer}>
       <Content ref={refContent}>
-        {products &&
+        {products.length > 0 ? (
           products.map((product) => (
             <Product key={product.id} product={product} />
-          ))}
+          ))
+        ) : (
+          <span>
+            Não foi adicionado nenhum produto nesta categoria no momento!
+          </span>
+        )}
       </Content>
       <SlideChevron>
         <ChevronButton

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import api from '../../services/api';
 
+import bannerStatic from './bannerData';
+
 import { Container, ChevronButton, ImageElement } from './styles';
 
 interface BannerProps {
@@ -14,7 +16,7 @@ interface BannerProps {
 const BannerContainer: React.FC = () => {
   const [slides, setSlides] = useState<BannerProps[]>([]);
   const [current, setCurrent] = useState(0);
-  const lenght = slides.length;
+  const lenght = slides.length > 0 ? slides.length : bannerStatic.length;
 
   const loadSlides = useCallback(async () => {
     const response = await api.get('/banners');
@@ -51,22 +53,33 @@ const BannerContainer: React.FC = () => {
     };
   }, [current, slides]);
 
-  if (!Array.isArray(slides) || slides.length <= 0) {
-    return null;
-  }
+  // if (!Array.isArray(slides) || slides.length <= 0) {
+  //   return null;
+  // }
+
+  console.log(slides ? 'existe' : 'não exists');
 
   return (
     <Container>
-      {slides &&
-        slides.map((banner, index) => (
-          <ImageElement
-            key={banner.id}
-            src={banner.banner_image.url}
-            alt=""
-            isActived={index === current}
-            isActivedReverse={index < current}
-          />
-        ))}
+      {slides.length > 0
+        ? slides.map((banner, index) => (
+            <ImageElement
+              key={banner.id}
+              src={banner.banner_image.url}
+              alt=""
+              isActived={index === current}
+              isActivedReverse={index < current}
+            />
+          ))
+        : bannerStatic.map((banner, index) => (
+            <ImageElement
+              key={banner.id}
+              src={banner.banner_image.url}
+              alt=""
+              isActived={index === current}
+              isActivedReverse={index < current}
+            />
+          ))}
       <ChevronButton type="button" onClick={prevSlide}>
         <FiChevronLeft size={40} />
       </ChevronButton>
